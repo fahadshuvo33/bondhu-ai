@@ -1,0 +1,1334 @@
+Bondhu AI - Detailed Product & Technical Specification
+📱 Mobile App Structure
+Authentication Flow
+
+    Login Options:
+        Phone number with OTP (primary for Bangladesh)
+        Gmail login (secondary option)
+        Facebook login (optional)
+    First-time User Experience:
+        Welcome screen with app benefits
+        Phone number entry → OTP verification
+        Basic profile setup (name, education level, institution)
+        10 free credits bonus with welcome message
+        Optional: Connect Gmail for backup
+
+Main App Pages (5 Core Screens)
+1. Home Dashboard
+
+    Top Section: Credit balance prominently displayed
+    Quick Actions Grid:
+        "Ask AI" - Text chat
+        "Scan Problem" - Camera for math/diagrams
+        "Upload PDF" - Document analysis
+        "Study History" - Previous conversations
+    Daily Bonus Banner: "Login streak: 5 days! Claim 2 free credits"
+    Recent Activity: Last 3-5 interactions
+
+2. AI Chat Screen
+
+    Model Selector (top right):
+        Smart mode (auto-selects based on question)
+        Basic (1 credit)
+        Advanced (3 credits)
+        Vision (5 credits)
+    Chat Interface:
+        Clean messaging UI
+        "Typing..." indicators
+        Copy/Share buttons on responses
+        Star important responses
+    Bottom Bar:
+        Text input
+        Attachment button (image/PDF)
+        Voice input option
+
+3. Credits & Payments
+
+    Current Balance Card: Large display with icon
+    Purchase Options:
+        50 credits = 50 TK
+        100 credits = 95 TK (5% bonus)
+        500 credits = 450 TK (10% bonus)
+        1000 credits = 850 TK (15% bonus)
+    Payment Methods:
+        bKash (most prominent)
+        Nagad
+        Rocket (future)
+    Transaction History: List with filters
+
+4. Study Library
+
+    Tabs:
+        Chat History (searchable)
+        Saved Responses (starred items)
+        Uploaded Documents
+        Generated Images
+    Each Item Shows:
+        Date/time
+        Credits used
+        Subject tag (auto-detected)
+        Preview text
+
+5. Profile & Settings
+
+    Profile Info: Name, phone, education details
+    Study Preferences:
+        Default language (Bangla/English)
+        Subjects of interest
+        Preferred explanation style
+    App Settings:
+        Notifications
+        Data saver mode
+        Clear cache
+    Help Section: FAQs, contact support
+
+Additional Screens
+
+    Onboarding Tutorial: 3-4 slides explaining features
+    Credit Purchase Flow: Secure payment screens
+    PDF Viewer: With highlight and annotation
+    Image Editor: Crop/rotate before sending
+    Referral Program: Share code, track rewards
+
+🧠 Smart AI Management System
+Token Optimization Strategy
+Context Length Management
+
+    Threshold: 1,500 tokens (about 1,000 words)
+    When User Exceeds:
+        System detects long conversation
+        Background job summarizes using cheap model (Mixtral/Llama)
+        Summary becomes new context
+        User sees: "Conversation summarized to save credits"
+        Original available via "View Full History"
+
+Smart Model Selection
+
+    Simple Questions (1 credit):
+        Definition queries
+        Basic explanations
+        Translation requests
+        Uses: GPT-3.5-turbo or Gemini Flash
+
+    Complex Questions (3 credits):
+        Multi-step problems
+        Essay help
+        Code explanations
+        Uses: GPT-4-turbo or Claude-3
+
+    Visual Questions (5 credits):
+        Handwritten problems
+        Diagram analysis
+        Graph interpretation
+        Uses: GPT-4-Vision or Gemini Pro Vision
+
+Cost Optimization Features
+Automatic Prompt Enhancement
+
+    User types: "explain photosynthesis"
+    System adds: "Explain photosynthesis in simple terms for a [user's education level] student in 200 words"
+    Saves tokens while improving response quality
+
+Response Caching
+
+    Common questions cached for 7 days
+    If another user asks similar question → instant response, minimal cost
+    Cache categories:
+        Subject definitions
+        Formula explanations
+        Common homework problems
+
+Batch Processing
+
+    PDF uploads processed in background
+    Groups multiple pages for single API call
+    Notifies user when complete
+
+🔧 API Design Philosophy
+Endpoint Structure
+RESTful + Practical
+
+    Standard REST for CRUD operations
+    Action-based endpoints for complex operations
+    WebSocket for real-time features
+
+Core API Groups
+
+Authentication (/api/v1/auth/)
+
+    POST /send-otp - Initiates phone verification
+    POST /verify-otp - Completes verification
+    POST /google-login - OAuth flow
+    POST /refresh-token - Token renewal
+    GET /me - Current user info
+
+AI Services (/api/v1/ai/)
+
+    POST /chat - Text-based queries
+    POST /vision - Image analysis
+    POST /document - PDF processing
+    GET /models - Available models with costs
+    GET /history/{request_id} - Retrieve past interaction
+
+Credits (/api/v1/credits/)
+
+    GET /balance - Current balance
+    GET /transactions - History with pagination
+    POST /estimate - Preview cost before request
+    GET /packages - Available purchase options
+
+Payments (/api/v1/payments/)
+
+    POST /initiate - Start payment flow
+    POST /callback/bkash - bKash webhook
+    GET /status/{payment_id} - Check payment status
+    GET /history - Payment records
+
+Request/Response Patterns
+Smart Error Handling
+
+    Insufficient credits → Return exact amount needed
+    Rate limit hit → Return wait time in seconds
+    Model unavailable → Auto-fallback to alternative
+    Network issues → Queue request for retry
+
+Progressive Responses
+
+    Immediate acknowledgment with request ID
+    Status updates via WebSocket/SSE
+    Partial results for long operations
+    Final response with full details
+
+💡 Intelligent Features
+Subject Detection
+
+    Analyzes question content
+    Auto-tags: Math, Physics, Chemistry, Biology, English, Bangla
+    Uses tags for:
+        Better model selection
+        Relevant response formatting
+        Study analytics
+
+Language Handling
+
+    Detects Bangla vs English input
+    Responds in same language
+    Special handling for Banglish
+    Translation option for responses
+
+Study Analytics Dashboard (Web Portal)
+
+    Usage patterns by subject
+    Peak study times
+    Most challenging topics
+    Progress tracking
+    Parent view option (with permission)
+
+📊 Credit Economy Design
+Credit Sources
+
+    Purchase: Direct buying
+    Daily Login: 2 credits/day
+    Streak Bonus: Extra credits for consecutive days
+    Referrals: 10 credits per friend
+    Achievements: Complete profile, first PDF upload, etc.
+    Watch Ads: Optional 1 credit per ad (future)
+
+Credit Pricing Strategy
+
+    Loss Leader: First response each day costs 50% less
+    Bundle Deals: Subject-specific packages (Math 100 credits pack)
+    Subscription Option: Monthly unlimited basic model access
+    School Partnerships: Bulk credits for institutions
+
+🔐 Security & Privacy
+Data Protection
+
+    Questions encrypted in transit and at rest
+    Personal info separate from study data
+    Auto-delete option after 30 days
+    No sharing with schools without consent
+    Anonymous mode available
+
+Payment Security
+
+    No card details stored
+    Payment provider handles all transactions
+    Automatic receipt generation
+    Refund policy for failed AI responses
+📈 Growth Features
+Time-Based Plans (Future Implementation)
+
+    Daily Pass: 24 hours unlimited basic model - 99 TK
+    Weekly Student: 7 days, 200 queries - 399 TK
+    Monthly Scholar: 30 days, 1000 queries - 1499 TK
+    Exam Season Special: 15 days unlimited - 799 TK
+    Group Plans: 5 students share 1 plan - 20% discount
+
+Hybrid Model:
+
+    Users can mix credit-based and time-based
+    Time plans only for specific models (GPT-3.5, Gemini Flash)
+    Premium models (GPT-4, Claude) always require credits
+    Clear UI showing: "You have Monthly Plan + 45 credits"
+
+🤖 Model Selection Interface (Revised)
+Transparent Model Choice
+Chat Screen Model Selector (Top of screen)
+
+text
+
+┌─────────────────────────────────────────┐
+│ Select AI Model                    [?]  │
+├─────────────────────────────────────────┤
+│ 🟢 GPT-3.5 (Fast)           1 credit   │
+│ 🔵 Gemini Pro (Balanced)    2 credits  │
+│ 🟣 GPT-4 (Best Quality)     3 credits  │
+│ 🟡 Claude-3 (Research)      3 credits  │
+│ 🔴 GPT-4 Vision (Images)    5 credits  │
+└─────────────────────────────────────────┘
+
+Model Help Page (Accessible via [?] button)
+
+"Which AI Should I Use?"
+
+    GPT-3.5 (1 credit) ✅ Best for:
+        Quick questions
+        Definitions and explanations
+        Translation
+        Basic math problems
+        Grammar checks
+    Gemini Pro (2 credits) ✅ Best for:
+        Longer explanations
+        Step-by-step solutions
+        Creative writing help
+        General homework
+    GPT-4 (3 credits) ✅ Best for:
+        Complex math/physics
+        Essay writing
+        Research help
+        Programming questions
+        Critical thinking problems
+    Claude-3 (3 credits) ✅ Best for:
+        In-depth analysis
+        Research papers
+        Long documents
+        Detailed explanations
+    Vision Models (5 credits) ✅ Best for:
+        Handwritten problems
+        Diagrams and charts
+        Photo of textbook pages
+        Geometric problems
+
+Pro Tips:
+
+    Start with cheaper models first
+    Use expensive models only when needed
+    Save credits by being specific in questions
+
+Smart Recommendations (Not Auto-Select)
+
+    System suggests: "This looks like a math problem. GPT-4 recommended"
+    User still chooses: Accept recommendation or pick different model
+    Shows estimated response quality: ⭐⭐⭐⭐⭐
+
+📊 Detailed API Response Structure
+Credit Transparency
+
+Every API response includes:
+
+text
+
+{
+  "response": "AI generated content...",
+  "metadata": {
+    "model_used": "gpt-3.5-turbo",
+    "credits_charged": 1,
+    "credits_remaining": 47,
+    "response_quality": "standard",
+    "processing_time_ms": 1250,
+    "cached": false,
+    "token_count": 245
+  }
+}
+
+Cost Estimation Endpoint
+
+Before sending request:
+
+text
+
+POST /api/v1/ai/estimate
+{
+  "question": "User's question",
+  "model": "gpt-4",
+  "attachments": ["image.jpg"]
+}
+
+Response:
+{
+  "estimated_credits": 5,
+  "breakdown": {
+    "base_cost": 3,
+    "image_processing": 2
+  },
+  "current_balance": 47,
+  "sufficient_credits": true
+}
+
+🎯 User Experience Optimizations
+First-Time User Journey
+
+    Download & Open → Beautiful splash screen with tagline
+    Welcome Screen → "AI-powered study buddy for Bangladesh students"
+    Phone Entry → Auto-detect Bangladesh +880 prefix
+    OTP Screen → 60-second countdown, resend option
+    Quick Profile → Just name and education level
+    Tutorial → 3 interactive slides:
+        "Ask any study question"
+        "Choose your AI assistant"
+        "Upload photos of problems"
+    First Question → Guided experience with free credits
+    Success → Show savings: "You just saved 2 hours of tuition!"
+
+Daily Active User Features
+Smart Notifications
+
+    "Good morning! 2 free credits waiting"
+    "Study streak at risk! Login to maintain 7-day streak"
+    "Your friend joined using your code - 10 credits earned!"
+    "New feature: Voice questions now available"
+
+Gamification Elements
+
+    Badges: First Question, Week Warrior, Math Master
+    Streaks: Daily login counter with rewards
+    Leaderboard: Top learners in your school (optional)
+    Challenges: "Complete 5 math problems this week"
+
+🏗️ Backend Architecture Details
+Request Processing Pipeline
+
+    Request Validation Layer
+        Check authentication token
+        Validate user subscription/credits
+        Check rate limits (per minute/hour/day)
+        Validate input size and format
+
+    Pre-Processing Layer
+        Detect language (Bangla/English/Mixed)
+        Identify subject automatically
+        Check cache for similar questions
+        Format prompt for optimal response
+
+    Model Selection Logic
+        User's selected model
+        Availability check
+        Fallback options if primary fails
+        Cost confirmation
+
+    AI Provider Management
+        Load balance across API keys
+        Handle rate limits per provider
+        Automatic retry with backoff
+        Error recovery mechanisms
+
+    Post-Processing Layer
+        Format response for mobile display
+        Extract key points for summary
+        Generate follow-up suggestions
+        Update user analytics
+
+Database Optimization Strategy
+Hot Data (Redis - Instant access)
+
+    User session and current balance
+    Recent questions (last 24 hours)
+    Model availability status
+    Rate limit counters
+    Active promocodes
+
+Warm Data (PostgreSQL - Quick queries)
+
+    User profiles and preferences
+    Transaction history (last 30 days)
+    Question-answer pairs
+    Analytics aggregates
+
+Cold Data (S3/Archive - Rare access)
+
+    Old conversations (>30 days)
+    Deleted user data (compliance)
+    System logs
+    Backup data
+
+💰 Revenue Optimization
+Pricing Psychology
+
+    Anchor Pricing: Show "Tutor costs 500 TK/hour" vs "AI costs 50 TK/month"
+    Bundle Visualization: "Save 150 TK" on bigger packs
+    Social Proof: "2,847 students bought this pack today"
+    Urgency: "Exam season offer ends in 2 days"
+
+Retention Strategies
+
+    Credit Expiry: Gentle - 90 days for purchased, 7 days for bonus
+    Re-engagement: "We miss you! Here's 5 free credits"
+    Upgrade Prompts: "Unlock GPT-4 for better essays"
+    Parent Portal: Parents can buy credits for children
+
+🚀 Scaling Roadmap
+Phase 1: MVP (Months 1-3)
+
+    Basic chat with 3 models
+    Credit system
+    bKash integration
+    5 core screens
+    Target: 1,000 users
+
+Phase 2: Growth (Months 4-6)
+
+    Image analysis
+    PDF processing
+    Nagad payment
+    Referral system
+    Study analytics
+    Target: 10,000 users
+
+Phase 3: Expansion (Months 7-12)
+
+    Voice interaction
+    Time-based plans
+    School partnerships
+    Parent accounts
+    Collaborative study
+    Target: 100,000 users
+
+Phase 4: Platform (Year 2)
+
+    Live tutor integration
+    Mock exams
+    Study groups
+    Content marketplace
+    Regional languages
+🛡️ Quality Assurance
+Response Quality Control
+
+    Confidence Scoring: AI responses tagged with confidence level
+    Fact Checking: Critical subjects (Math/Science) double-verified
+    Inappropriate Content: Automatic filtering for harmful content
+    Feedback Loop: 👍👎 buttons on each response
+    Human Review: Flagged responses reviewed within 24 hours
+
+User Safety Features
+
+    No personal advice (medical/legal)
+    Academic integrity warnings
+    Age-appropriate responses
+    Exam rules compliance
+    Report mechanism for issues
+
+💬 AI Chat Screen - Detailed Design
+Updated Chat Interface Layout
+
+text
+
+┌─────────────────────────────────────────┐
+│ 📚 Math Problem          Credits: 47 💰 │
+├─────────────────────────────────────────┤
+│ ┌─────────────────────────────────────┐ │
+│ │ 🤖 Select Your AI Assistant      ℹ️ │ │
+│ ├─────────────────────────────────────┤ │
+│ │ ○ GPT-3.5 Fast (1 credit)      ⚡  │ │
+│ │ ● GPT-4 Smart (3 credits)      🎓  │ │
+│ │ ○ Claude Detailed (3 credits)   📚  │ │
+│ │ ○ Gemini Balanced (2 credits)   ⚖️  │ │
+│ └─────────────────────────────────────┘ │
+│                                          │
+│ You: Can you solve this quadratic       │
+│ equation: x² + 5x + 6 = 0?              │
+│                                     2:31 PM │
+│                                          │
+│ GPT-4 (3 credits used)             2:31 PM │
+│ ┌─────────────────────────────────────┐ │
+│ │ I'll solve this step by step:       │ │
+│ │                                     │ │
+│ │ Given: x² + 5x + 6 = 0              │ │
+│ │                                     │ │
+│ │ Step 1: Identify coefficients       │ │
+│ │ a = 1, b = 5, c = 6                 │ │
+│ │                                     │ │
+│ │ Step 2: Factor or use formula...    │ │
+│ └─────────────────────────────────────┘ │
+│   📋 Copy  🔁 Share  ⭐ Save  👍 👎    │
+│                                          │
+│ 💡 Follow-up suggestions:                │
+│ • "Explain factoring method"            │
+│ • "Show graphical solution"             │
+│ • "Give me similar problems"            │
+│                                          │
+├─────────────────────────────────────────┤
+│ Type your question...           📷 📎 🎤 │
+└─────────────────────────────────────────┘
+
+Key UI Elements Explained
+
+    Model Selection Card:
+        Always visible at top
+        Shows credit cost clearly
+        Icons indicate model strength
+        ℹ️ button opens detailed help
+        Selected model highlighted
+
+    Cost Transparency:
+        Credit cost shown BEFORE sending
+        Running total after each question
+        Warning if low balance (<5 credits)
+
+    Response Features:
+        Model name and credits charged shown
+        Action buttons for each response
+        Quality indicators (confidence level)
+        Response time displayed
+
+    Smart Suggestions:
+        Context-aware follow-ups
+        One-tap to ask (uses same model)
+        Helps students learn progressively
+
+Advanced Chat Features
+Multi-Modal Input Options
+
+    Text: Regular typing with Bangla keyboard support
+    Camera:
+        Live capture for handwritten problems
+        Gallery selection for textbook pages
+        Auto-crop and enhance
+    Voice:
+        Hold to speak in Bangla/English
+        Auto-transcribe and confirm
+    File:
+        PDF pages (max 5 at once)
+        Images batch upload
+
+Conversation Management
+
+    New Chat: Start fresh (previous saved)
+    Continue: Load previous context
+    Branch: Create alternate conversation path
+    Export: Download as PDF/Doc
+
+📱 Screen Flow Details
+Credits & Payment Screen - Enhanced
+
+text
+
+┌─────────────────────────────────────────┐
+│ 💰 Credits & Billing                    │
+├─────────────────────────────────────────┤
+│ Current Balance                         │
+│ ┌─────────────────────────────────────┐ │
+│ │      🪙 47 Credits                  │ │
+│ │   Expires in 83 days               │ │
+│ └─────────────────────────────────────┘ │
+│                                          │
+│ 🎁 Earn Free Credits                    │
+│ • Daily login: 2 credits ✅ (claimed)    │
+│ • 7-day streak: 10 credits (4 days left)│
+│ • Refer friend: 10 credits each         │
+│ • Watch video: 1 credit (3 available)   │
+│                                          │
+│ 💳 Buy Credits                          │
+│ ┌─────────────────────────────────────┐ │
+│ │ 🔥 BEST VALUE                       │ │
+│ │ 500 credits     450 BDT  SAVE 50!  │ │
+│ └─────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────┐ │
+│ │ 100 credits      95 BDT  Popular    │ │
+│ └─────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────┐ │
+│ │ 50 credits       50 BDT  Starter    │ │
+│ └─────────────────────────────────────┘ │
+│                                          │
+│ 🕒 Time Plans (Coming Soon)             │
+│ • Daily Pass: 99 BDT/day                │
+│ • Weekly: 399 BDT/week                  │
+│ • Monthly: 1499 BDT/month               │
+│                                          │
+│ Payment Methods:                         │
+│ [bKash] [Nagad] [Rocket*]               │
+│                                          │
+│ Transaction History →                    │
+└─────────────────────────────────────────┘
+
+Study Library - Detailed View
+
+text
+
+┌─────────────────────────────────────────┐
+│ 📚 My Study Library                     │
+├─────────────────────────────────────────┤
+│ [Chats] [Saved] [PDFs] [Images]        │
+├─────────────────────────────────────────┤
+│ 🔍 Search your content...               │
+├─────────────────────────────────────────┤
+│ Filter: [All] [Math] [Physics] [Bio]    │
+├─────────────────────────────────────────┤
+│ Today                                    │
+│ ┌─────────────────────────────────────┐ │
+│ │ 📐 Quadratic Equations              │ │
+│ │ GPT-4 • 3 credits • 2:31 PM        │ │
+│ │ "Can you solve x² + 5x + 6..."     │ │
+│ └─────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────┐ │
+│ │ 🧬 Photosynthesis Process          │ │
+│ │ Claude-3 • 3 credits • 11:20 AM    │ │
+│ │ "Explain photosynthesis in..."      │ │
+│ └─────────────────────────────────────┘ │
+│                                          │
+│ Yesterday                                │
+│ ┌─────────────────────────────────────┐ │
+│ │ 📖 Essay: Digital Bangladesh       │ │
+│ │ GPT-3.5 • 1 credit • 9:45 PM      │ │
+│ │ ⭐ Saved                            │ │
+│ └─────────────────────────────────────┘ │
+│                                          │
+│ 📊 Study Stats This Week                │
+│ • Questions asked: 24                    │
+│ • Credits used: 47                      │
+│ • Most studied: Mathematics             │
+│ • Study time: 3h 25m                    │
+└─────────────────────────────────────────┘
+
+🔧 Technical Implementation Details
+Smart Context Management
+Token Optimization Flow
+
+    Initial State: Fresh conversation, no context
+    Growing Context: Each Q&A adds to history
+    Threshold Alert (1,200 tokens):
+        Yellow warning: "Conversation getting long"
+        Suggestion
+🔧 Technical Implementation Details (Continued)
+Smart Context Management
+Token Optimization Flow
+
+    Initial State: Fresh conversation, no context
+    Growing Context: Each Q&A adds to history
+    Threshold Alert (1,200 tokens):
+        Yellow warning: "Conversation getting long"
+        Suggestion: "Start new chat for better responses"
+    Auto-Summarization (1,500 tokens):
+        Background process triggers
+        Uses Mixtral-8x7B (0.2 credits internal cost)
+        Creates smart summary preserving key points
+        User notification: "Chat optimized to save credits"
+    User Options:
+        View full history (read-only)
+        Export complete conversation
+        Start fresh with summary context
+
+Summary Example
+
+text
+
+Original Context (1,500 tokens):
+- User asked about quadratic equations
+- Explained factoring method
+- Solved 3 example problems
+- Discussed graphing parabolas
+- Common mistakes highlighted
+
+Smart Summary (200 tokens):
+"Student learning quadratic equations. Covered: factoring method (x²+5x+6), graphing parabolas, vertex form. Understands basic concepts. Struggles with: completing the square method."
+
+API Rate Limiting Strategy
+Multi-Tier Limits
+
+    Free Users (first 10 credits):
+        10 requests/minute
+        50 requests/hour
+        100 requests/day
+
+    Regular Users:
+        20 requests/minute
+        200 requests/hour
+        1000 requests/day
+
+    Premium Users (time-based plans):
+        50 requests/minute
+        500 requests/hour
+        Unlimited daily
+
+Smart Queueing
+
+    If rate limit hit → Queue request
+    Show position: "Your request is #3 in queue"
+    Estimated wait time: "~15 seconds"
+    Option to use premium model to skip queue
+
+Payment Integration Details
+bKash Integration Flow
+
+    User selects credit package
+    API creates payment request with unique ID
+    Redirect to bKash portal/app
+    User completes payment
+    bKash webhook hits callback endpoint
+    Verify signature and amount
+    Credit user account instantly
+    Send confirmation SMS
+
+Payment Security Measures
+
+    Idempotent payment IDs (no double credits)
+    Webhook signature verification
+    Payment timeout (15 minutes)
+    Automatic refund for failures
+    Transaction logs for audit
+
+Fraud Prevention
+
+    Velocity checks (max 5 purchases/day)
+    Unusual amount alerts
+    Device fingerprinting
+    Geographic checks
+    Manual review for large purchases
+
+📊 Analytics & Insights
+Student Dashboard (Web Portal)
+Personal Analytics
+
+text
+
+Study Performance This Month:
+┌─────────────────────────────────────────┐
+│ 📈 Questions by Subject                 │
+│                                         │
+│ Math        ████████████ 45%           │
+│ Physics     ███████ 30%                │
+│ Chemistry   ████ 15%                   │
+│ English     ██ 10%                     │
+│                                         │
+│ 📊 Daily Study Pattern                  │
+│ Peak hours: 8-10 PM                     │
+│ Average session: 25 minutes             │
+│ Questions per day: 12                   │
+└─────────────────────────────────────────┘
+
+Learning Insights
+
+    Topics mastered vs struggling
+    Complexity progression over time
+    Model preferences by subject
+    Cost per subject analysis
+
+School Administrator Portal
+Institution Dashboard
+
+    Total active students
+    Credits purchased vs used
+    Popular subjects
+    Peak usage times
+    Performance metrics
+
+Bulk Features
+
+    Purchase credits for all students
+    Set usage limits
+    Export reports for parents
+    Track learning outcomes
+
+🌐 Localization Strategy
+Language Handling
+Bangla-First Approach
+
+    All UI elements in Bangla by default
+    English option in settings
+    Code-switching support (Banglish)
+
+Smart Language Detection
+
+text
+
+User: "Photosynthesis ki?"
+AI: Responds in Bangla
+
+User: "What is photosynthesis?"
+AI: Responds in English
+
+User: "Amar math homework e help dorkar"
+AI: Understands mixed language, responds appropriately
+
+Cultural Adaptations
+
+    Examples use local context (Taka, not dollars)
+    Problems reference Bangladesh geography/culture
+    Prayer time considerations for notifications
+    Local exam patterns (SSC, HSC)
+
+🚨 Error Handling & Recovery
+User-Friendly Error Messages
+Instead of Technical Errors
+
+❌ "Error 503: Service Unavailable"
+✅ "AI is thinking too hard! Try again in 30 seconds 😊"
+
+❌ "Insufficient credits"
+✅ "You need 3 more credits for GPT-4. Use GPT-3.5 (1 credit) or add credits"
+
+❌ "Rate limit exceeded"
+✅ "You're studying hard! Take a 60-second break ☕"
+Graceful Degradation
+
+    GPT-4 down → Auto-suggest Claude-3
+    All premium down → Offer basic models
+    Internet issues → Queue for when online
+    Payment failed → Save cart, retry later
+
+🔐 Data Privacy & Security
+User Data Protection
+What We Store
+
+    Phone number (encrypted)
+    Study questions (anonymized after 30 days)
+    Performance metrics (aggregated)
+    Payment records (PCI compliant)
+
+What We DON'T Store
+
+    Actual answers to homework
+    Personal conversations
+    Payment card details
+    Location tracking
+
+Parental Controls
+
+    Optional parent account linking
+    View study topics (not actual questions)
+    Set spending limits
+    Time-based restrictions
+
+📱 Progressive Web App Features
+Offline Capabilities
+
+    View last 50 conversations
+    Access saved responses
+    Queue questions for when online
+    Offline study timer
+
+Device Optimization
+
+    Low-end phones: Lite mode with text-only
+    Limited data: Compress images, lazy load
+    Battery saver: Dark mode, reduced animations
+    Small screens: Responsive design from 4"
+
+🎯 Marketing Integration
+Referral System
+Student Referral Program
+
+text
+
+Your Code: STUDYBRO2024
+
+Rewards:
+- You get: 10 credits per friend
+- Friend gets: 5 bonus credits
+- Milestone bonuses:
+  - 5 friends: 25 extra credits
+  - 10 friends: 100 credits + "Influencer" badge
+
+Seasonal Campaigns
+
+    Exam Season: Double credits on bulk purchases
+    New School Year: First-time user bonuses
+    Victory Day: 16% discount on Dec 16
+    Ramadan: Special evening study packages
+
+🔄 Continuous Improvement
+A/B Testing Framework
+
+    Credit package pricing
+    Model recommendation algorithms
+    UI/UX improvements
+    Notification timing
+
+Feedback Loops
+
+    In-app feedback: Quick emoji reactions
+    Weekly surveys: 1-question polls
+    Support tickets: Track common issues
+    Community forum: Student suggestions
+
+Version Management
+
+    Fortnightly app updates
+    Forced update for critical fixes
+    Gradual rollout for new features
+    Rollback capability
+
+📈 Success Metrics
+Key Performance Indicators
+User Metrics
+
+    Daily Active Users (DAU)
+    Monthly Active Users (MAU)
+    Retention: D1, D7, D30
+    Average session duration
+    Questions per user per day
+
+📈 Success Metrics (Continued)
+Business Metrics
+
+    Average Revenue Per User (ARPU)
+    Credit purchase vs usage ratio
+    Customer Acquisition Cost (CAC)
+    Lifetime Value (LTV)
+    Profit margin per AI provider
+
+Target Metrics by Phase
+
+Phase 1 (Month 3):
+
+    1,000 active users
+    60% D7 retention
+    200 BDT ARPU
+    70% credit utilization
+
+Phase 2 (Month 6):
+
+    10,000 active users
+    65% D7 retention
+    350 BDT ARPU
+    20% using time-based plans
+
+Phase 3 (Month 12):
+
+    100,000 active users
+    70% D7 retention
+    500 BDT ARPU
+    5 school partnerships
+
+🛠️ Technical Infrastructure Details
+Server Architecture
+Traffic Distribution
+
+text
+
+User Request Flow:
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Cloudflare│────▶│   Load      │────▶│   FastAPI   │
+│     CDN     │     │  Balancer   │     │  Instances  │
+└─────────────┘     └─────────────┘     └─────────────┘
+                           │                     │
+                           ▼                     ▼
+                    ┌─────────────┐     ┌─────────────┐
+                    │   Static    │     │  Database   │
+                    │   Assets    │     │   Cluster   │
+                    └─────────────┘     └─────────────┘
+
+Auto-Scaling Rules
+
+    CPU > 70% → Add instance
+    Response time > 2s → Add instance
+    Queue depth > 100 → Add worker
+    Credit purchase spike → Scale payment workers
+    Exam season → Pre-scale capacity
+
+Cost Management System
+AI Provider Cost Tracking
+
+python
+
+Provider Daily Costs Dashboard:
+┌─────────────────────────────────────────┐
+│ Provider    Requests   Cost    Margin   │
+├─────────────────────────────────────────┤
+│ GPT-3.5     10,000    $50     65%      │
+│ GPT-4       2,000     $120    40%      │
+│ Claude-3    1,500     $75     45%      │
+│ Gemini      3,000     $30     70%      │
+│ Mixtral     5,000     $10     85%      │
+├─────────────────────────────────────────┤
+│ Total:      21,500    $285    58%      │
+└─────────────────────────────────────────┘
+
+Automatic Cost Optimization
+
+    Route simple queries to cheaper models
+    Batch similar requests
+    Cache common responses
+    Negotiate volume discounts
+    Switch providers based on availability
+
+Monitoring & Alerting
+Real-time Dashboards
+
+    System Health:
+        API response times
+        Error rates by endpoint
+        Active users
+        Server resources
+
+    Business Metrics:
+        Credits purchased (last hour)
+        AI costs vs revenue
+        Popular questions
+        User growth rate
+
+    Alert Conditions:
+        Payment failures > 5%
+        API errors > 1%
+        Credit balance negative
+        Unusual usage patterns
+
+🎨 Design System
+Brand Guidelines
+Color Palette
+
+text
+
+Primary:    #2E7D32 (Education Green)
+Secondary:  #1976D2 (Trust Blue)
+Accent:     #FF6F00 (Energy Orange)
+Success:    #4CAF50
+Warning:    #FF9800
+Error:      #F44336
+Background: #F5F5F5
+Text:       #212121
+
+Typography
+
+    Headers: Hind Siliguri (Bangla), Roboto (English)
+    Body: Noto Sans Bengali, Open Sans
+    Monospace: JetBrains Mono (for code)
+
+UI Components
+
+    Rounded corners (8px)
+    Soft shadows for depth
+    60-30-10 color rule
+    Generous whitespace
+    Touch targets minimum 44px
+
+Accessibility Features
+
+    High contrast mode
+    Font size adjustment
+    Screen reader support
+    Voice navigation
+    Reduced motion option
+
+🔌 Third-Party Integrations
+Current Integrations
+AI Providers
+
+    OpenAI: GPT-4, GPT-3.5, DALL-E 3
+    Anthropic: Claude-3 (Opus, Sonnet, Haiku)
+    Google: Gemini Pro, Gemini Flash
+    Groq: Mixtral, Llama-2
+    Together AI: Open source models
+
+Infrastructure
+
+    Cloudflare: CDN, DDoS protection
+    AWS S3: File storage
+    SendGrid: Email notifications
+    Twilio: SMS for OTP
+    Sentry: Error tracking
+
+Future Integrations
+Education Platforms
+
+    Khan Academy API for practice problems
+    YouTube API for video explanations
+    Google Scholar for research
+    Wikipedia for quick facts
+
+Local Services
+
+    Robi/Grameenphone for carrier billing
+    Government e-Service for student verification
+    Local cloud providers for data residency
+
+📱 Mobile App Technical Details
+React Native Architecture
+Core Libraries
+
+json
+
+{
+  "dependencies": {
+    "react-native": "0.72.x",
+    "react-navigation": "6.x",
+    "react-native-paper": "5.x",
+    "react-native-vector-icons": "10.x",
+    "react-native-async-storage": "1.x",
+    "react-native-image-picker": "5.x",
+    "react-native-pdf": "6.x",
+    "react-native-push-notification": "8.x",
+    "react-native-webview": "13.x"
+  }
+}
+
+State Management
+
+    Redux Toolkit for global state
+    React Query for API caching
+    MMKV for fast local storage
+    Redux Persist for offline
+
+Performance Optimizations
+
+    Lazy loading screens
+    Image caching with FastImage
+    Virtualized lists for history
+    Memoization for expensive renders
+    Bundle splitting by feature
+
+Native Modules
+Android Specific
+
+    bKash SDK integration
+    Nagad SDK integration
+    Bengali keyboard optimization
+    Background service for sync
+
+iOS Specific (Future)
+
+    Apple Pay integration
+    Siri shortcuts
+    Widget for quick access
+    Handoff support
+
+🌍 Expansion Strategy
+Geographic Expansion
+Phase 1: Bangladesh (Current)
+
+    Focus on Dhaka, Chittagong
+    Bengali language priority
+    Local payment methods
+    Bangladesh curriculum
+
+Phase 2: West Bengal (Year 2)
+
+    Indian payment methods
+    CBSE/ICSE curriculum
+    Rupee pricing
+    Kolkata server
+
+Phase 3: Pakistan (Year 2)
+
+    Urdu language support
+    JazzCash/Easypaisa
+    Pakistani curriculum
+    Karachi/Lahore servers
+
+Phase 4: Nepal/Sri Lanka (Year 3)
+
+    Multiple languages
+    Local partnerships
+    Regional content
+
+Feature Expansion Roadmap
+Q1 2025
+
+    Voice questions in Bangla
+    Group study rooms
+    Parent dashboard
+    Exam preparation mode
+
+Q2 2025
+
+    Live tutor backup
+    AR math visualizations
+    Handwriting practice
+    Study planner AI
+
+Q3 2025
+
+    Video explanations
+    Peer learning network
+    Scholarship finder
+    Career guidance AI
+
+Q4 2025
+
+    Full curriculum coverage
+    Mock test platform
+    Study certificates
+    School LMS integration
+
+🏢 Business Operations
+Customer Support Structure
+Tier 1: Self-Service
+
+    Comprehensive FAQ
+    Video tutorials
+    Community forum
+    AI chat support
+
+Tier 2: Chat Support
+
+    12-hour coverage (10 AM - 10 PM)
+    Bengali + English
+    5-minute response time
+    Common issue scripts
+
+Tier 3: Escalation
+
+    Technical issues
+    Payment problems
+    Account recovery
+    Feedback handling
+
+Content Moderation
+
+    Automated inappropriate content detection
+    Manual review queue
+    Community reporting
+    Academic integrity checks
+
+📋 Launch Checklist
+Pre-Launch (1 Month)
+
+Load testing (10,000 concurrent users)
+Security audit completion
+Payment gateway certification
+App store approval
+Legal compliance check
+Beta user feedback incorporation
+Customer support training
+
+    Marketing materials ready
+
+Launch Week
+
+Soft launch to 100 users
+Monitor system stability
+Gather initial feedback
+Fix critical issues
+Prepare PR announcement
+Influencer partnerships ready
+
+    School presentations scheduled
+
+Post-Launch (First Month)
+
+Daily metrics review
+User feedback analysis
+Performance optimization
+Feature prioritization
+Scaling preparation
+Partnership discussions
+
+    Media coverage tracking
+
+🎯 Success Factors
+Why Bondhu AI Will Succeed
+
+    Right Market: Huge student population needing affordable help
+    Right Pricing: Cheaper than tutors, flexible payment
+    Right Technology: Latest AI, optimized for cost
+    Right Localization: Bangla

@@ -1,6 +1,13 @@
-def main():
-    print("Hello from bondhu-ai!")
+from fastapi import FastAPI
+
+app = FastAPI()
 
 
-if __name__ == "__main__":
-    main()
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello from bondhu-ai!"}
