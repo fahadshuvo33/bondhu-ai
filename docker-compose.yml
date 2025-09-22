@@ -1,0 +1,68 @@
+
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    container_name: bondhu_ai_postgres
+    environment:
+      POSTGRES_USER: shuvo
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: bondhu_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shuvo -d bondhu_db"]
+      interval: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: bondhu_ai_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: 12345
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5055:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+  redis:
+    image: redis:8.2.1-alpine
+    container_name: bondhu_ai_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  app:
+    build:
+      context: .
+      args:
+        ENVIRONMENT: development
+    container_name: bondhu_ai_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app  # Hot reload
+      - uploads_data:/app/uploads
+    environment:
+      DATABASE_URL: postgresql+asyncpg://shuvo:12345@postgres:5432/bondhu_db
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+      DEBUG: true
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  redis_data:
+  uploads_data:

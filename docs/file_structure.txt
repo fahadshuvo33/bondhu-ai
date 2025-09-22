@@ -1,0 +1,66 @@
+ai-study-hub-backend/
+├── app/
+│   ├── __init__.py
+│   ├── main.py                 # FastAPI app initialization
+│   ├── config.py               # Settings and configuration
+│   ├── database.py             # Database connection
+│   ├── dependencies.py         # Shared dependencies
+│   │
+│   ├── models/                 # Database models
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── transaction.py
+│   │   └── credit.py
+│   │
+│   ├── schemas/                # Pydantic models
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── auth.py
+│   │   ├── ai_request.py
+│   │   └── payment.py
+│   │
+│   ├── api/                    
+│   │   ├── __init__.py
+│   │   └── v1/                 # Version 1 API
+│   │       ├── __init__.py
+│   │       ├── router.py       # Combines all v1 routes
+│   │       ├── auth.py         # Login, register
+│   │       ├── users.py        # User management
+│   │       ├── ai.py           # All AI endpoints
+│   │       ├── credits.py      # Credit management
+│   │       └── payments.py     # bKash/Nagad
+│   │
+│   ├── services/               # Business logic (shared across versions)
+│   │   ├── __init__.py
+│   │   ├── ai_service.py      
+│   │   ├── auth_service.py    
+│   │   ├── credit_service.py  
+│   │   └── payment_service.py 
+│   │
+│   ├── providers/              # AI provider integrations
+│   │   ├── __init__.py
+│   │   ├── base.py            
+│   │   ├── openai_provider.py
+│   │   ├── anthropic_provider.py
+│   │   └── google_provider.py
+│   │
+│   └── utils/                  
+│       ├── __init__.py
+│       ├── security.py        
+│       ├── files.py           
+│       └── rate_limit.py      
+│
+├── migrations/                 
+│   └── versions/
+│
+├── tests/                      
+│   ├── __init__.py
+│   ├── conftest.py
+│   └── test_ai.py
+│
+├── .env.example
+├── .gitignore
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
