@@ -1,0 +1,186 @@
+Bondhu AI Detailed Workflow
+1. User Sign-Up & Role Assignment
+
+User registers → selects role: Student / Teacher / Parent / Individual / Admin.
+
+System creates User + Profile in DB.
+
+Assign free credits (expire in 30 days).
+
+Paid users can buy Pro Plan credits (no expiry).
+
+2. PDF Upload
+
+Student uploads a PDF (free: 1 PDF, Pro: 10 PDFs).
+
+System chunks PDF into smaller sections (paragraphs, pages).
+
+Each chunk is embedded into vector DB (pgvector or vector DB).
+
+Metadata stored: PDF ID, page, title, uploaded_at.
+
+Student cannot replace PDF until 24h pass (free plan) to prevent misuse.
+
+3. PDF Chat Rooms
+
+Default chat room: For each uploaded PDF, the system creates a primary chat room.
+
+Student can ask questions about that PDF → AI uses RAG (retrieves relevant chunks) → generates answer.
+
+Credit usage:
+
+PDF-based chat → cheaper per message.
+
+Normal AI chat → standard credit cost.
+
+4. Syllabus-Based Chat Rooms (Pro Student)
+
+Pro students can create a syllabus for a PDF.
+
+Each syllabus creation generates a new chat room linked to the same PDF.
+
+Now:
+
+PDF Chat Room (full book)
+
+Syllabus Chat Room(s) (chapter-wise, topic-wise)
+
+Multiple syllabus → multiple chat rooms for the same PDF.
+
+Each message in syllabus chat is handled separately → scored, tracked, and AI can generate quizzes/mock exams.
+
+5. AI Preprocessing (Message Update)
+
+When student sends a message:
+
+Cheap AI preprocesses the message:
+
+Correct grammar/spelling
+
+Clarify meaning
+
+Classify question type (normal / PDF / syllabus / mock exam)
+
+Cleaned message sent to main AI.
+
+Benefits:
+
+Better AI responses
+
+Lower credit usage
+
+Consistent formatting
+
+6. AI Response Flow
+
+Main AI receives cleaned message + relevant PDF chunks.
+
+Returns:
+
+Direct answer (for Q&A)
+
+Quiz questions (if in syllabus/mock exam mode)
+
+Feedback / scoring (if student answers quizzes)
+
+Student sees AI response in the same chat room.
+
+7. Quiz & Mock Exam Mode
+
+Student (Pro) selects syllabus → AI generates:
+
+Weekly quizzes
+
+Full mock exams
+
+Different marks (2,3,4) per question type
+
+Student answers → AI scores automatically → stores in DB.
+
+Parents (if linked) can see results in parent dashboard.
+
+8. Credit System
+
+Free credits: daily bonus, expire 30 days after issue.
+
+Paid credits: unlimited or custom, no expiry.
+
+PDF chat → lower credit consumption.
+
+Normal chat → standard credit usage.
+
+9. Parent Interaction
+
+Parent account links to student account(s).
+
+Can see:
+
+AI chat history
+
+Quiz/mock exam results
+
+PDF usage statistics
+
+Parent Premium → advanced analytics, AI recommendations, alerts on child performance.
+
+10. Teacher Interaction
+
+Teacher can:
+
+Use AI for self-study (lesson plans, exam prep).
+
+Create classroom → link students → assign PDFs, track quizzes/exams.
+
+Teachers not managing students → behave like Individual Pro but with teacher-specific tools (lesson plan generator, assignment creation, exam paper generator).
+
+11. Individual Role
+
+Like student, but no classroom or parent features.
+
+Can upload PDFs, chat with AI, create syllabus (if Pro), generate quizzes.
+
+Target: research, university students, casual learners, job prep.
+
+12. Admin Role
+
+Manage users, subscriptions, PDFs, AI prompts.
+
+Oversee system health, monitor credit usage.
+
+Can update AI rules or optimize chat preprocessing logic.
+
+13. Full Flow Summary (Student Perspective)
+
+Sign-Up → Role Selection → Free/Paid Credits
+
+Upload PDF → Chunk → Embed in Vector DB
+
+Primary PDF Chat Room → Ask Questions → AI Preprocess → Main AI Response
+
+(Pro) Create Syllabus → New Syllabus Chat Room → AI Generates Quizzes/Mock Exams
+
+Send Message → AI Preprocess → Main AI → Response
+
+Answer Quizzes → Auto-scoring → Store Results
+
+Parent Dashboard → Monitor progress (if linked)
+
+Teacher / Individual Use → Use AI for lesson prep, research, or personal study
+
+Admin → Monitor & Optimize System
+
+If you want, I can now draw a diagram showing this full workflow, including:
+
+User roles
+
+PDF chat rooms & syllabus chat rooms
+
+AI preprocessing
+
+Vector DB retrieval
+
+Credit consumption
+
+Parent/Teacher/Admin interactions
+
+This would make it super clear for developers and investors.
