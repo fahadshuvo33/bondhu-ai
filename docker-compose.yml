@@ -43,14 +43,22 @@ services:
       context: .
       args:
         ENVIRONMENT: development
+        DEV: "1"
     container_name: bondhu_ai_app
     ports:
       - "8000:8000"
     volumes:
-      - ./app:/app/app  # Hot reload
+      - ./app:/app/app
+      - ./migrations:/app/migrations
+      - ./scripts:/app/scripts:ro  # Mount as read-only
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./uv.lock:/app/uv.lock
       - uploads_data:/app/uploads
     environment:
       DATABASE_URL: postgresql+asyncpg://shuvo:12345@postgres:5432/bondhu_db
+      # helper vars used by scripts/entrypoint.sh
+      DB_HOST: postgres
+      DB_PORT: '5432'
       REDIS_URL: redis://redis:6379/0
       ENVIRONMENT: development
       DEBUG: true
@@ -60,6 +68,7 @@ services:
       - postgres
       - redis
     # command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 volumes:
   postgres_data:

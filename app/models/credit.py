@@ -11,8 +11,9 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from app.models.base import BaseModel
+from app.models._base import BaseModel
 from enum import Enum
+from sqlalchemy import Index, UniqueConstraint
 
 
 class CreditType(str, Enum):
@@ -107,8 +108,8 @@ class CreditLedger(BaseModel):
     )  # Transaction ID, activity name, etc.
     description = Column(String)
 
-    # Metadata
-    metadata = Column(Text, nullable=True)  # JSON for additional info
+    # Metadata (rename attribute to avoid SQLAlchemy reserved name 'metadata')
+    meta_json = Column("metadata", Text, nullable=True)  # JSON for additional info
 
     # Relationships
     credit_account = relationship("Credit", back_populates="ledger_entries")

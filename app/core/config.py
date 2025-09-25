@@ -59,3 +59,9 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+
+
+# Note: Do NOT instantiate `settings` at import time. Some tools (alembic)
+# import project modules during migrations before environment variables are
+# available which would raise validation errors. Call `get_settings()` at
+# runtime where needed, for example inside request handlers or startup code.

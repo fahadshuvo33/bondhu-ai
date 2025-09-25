@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from app.models.base import BaseModel
+from app.models._base import BaseModel
 
 
 class Student(BaseModel):

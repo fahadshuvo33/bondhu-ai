@@ -1,9 +1,9 @@
-from sqlalchemy import Column, String, Integer, Float, Boolean, Text
-from app.models.base import BaseModelWithIntID
+from sqlalchemy import Column, String, Integer, Float, Boolean, Text, DateTime
+from app.models._base import BaseModelWithIntID
 
 
 class CreditConfig(BaseModelWithIntID):
-    """System-wide credit configuration"""
+    """System-wide credit configuration (DEPRECATED: Use SystemConfig instead)"""
 
     __tablename__ = "credit_config"
 
@@ -41,3 +41,7 @@ class CreditConfig(BaseModelWithIntID):
 
     # Is this the active configuration?
     is_active = Column(Boolean, default=True)
+
+    # Deprecation fields
+    deprecated_at = Column(DateTime(timezone=True), nullable=True)
+    replaced_by_config_name = Column(String, nullable=True)

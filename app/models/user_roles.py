@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from app.models.base import BaseModel
+from app.models._base import BaseModel
 from enum import Enum
 
 

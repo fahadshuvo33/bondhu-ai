@@ -13,6 +13,7 @@ from pgvector.sqlalchemy import Vector
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.models._base import BaseModel
+from sqlalchemy import Index
 
 
 class StudyMaterial(BaseModel):
@@ -23,6 +24,7 @@ class StudyMaterial(BaseModel):
     # Owner information
     student_id = Column(UUID(as_uuid=True), ForeignKey("students.user_id"), index=True)
     uploaded_by_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
+    user_document_id = Column(UUID(as_uuid=True), ForeignKey("user_documents.id"), nullable=True, index=True)
 
     # File info
     file_name = Column(String, nullable=False)
@@ -70,6 +72,7 @@ class StudyMaterial(BaseModel):
     view_count = Column(Integer, default=0)
     questions_asked = Column(Integer, default=0)
     last_accessed_at = Column(DateTime(timezone=True), nullable=True)
+    can_replace_after = Column(DateTime(timezone=True), nullable=True) # For free plans, restrict replacement
 
     # Sharing settings
     is_shared_in_classroom = Column(Boolean, default=False)
@@ -78,6 +81,7 @@ class StudyMaterial(BaseModel):
     # Relationships
     student = relationship("Student", back_populates="study_materials")
     uploader = relationship("User")
+    user_document = relationship("UserDocument", back_populates="study_materials")
     chunks = relationship(
         "DocumentChunk", back_populates="document", cascade="all, delete-orphan"
     )

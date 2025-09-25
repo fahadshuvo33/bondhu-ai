@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Boolean, DateTime, Enum as SQLEnum
-from app.models.base import BaseModel
+from app.models._base import BaseModel
 from enum import Enum
 
 
@@ -8,6 +8,7 @@ class UserType(str, Enum):
     PARENT = "parent"
     TEACHER = "teacher"
     ADMIN = "admin"
+    INDIVIDUAL = "individual"
 
 
 class User(BaseModel):

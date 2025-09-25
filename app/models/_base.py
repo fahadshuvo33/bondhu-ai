@@ -3,7 +3,7 @@ from sqlalchemy import Column, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr
-from app.database import Base
+from app.core.database import Base
 
 
 class TimestampMixin:

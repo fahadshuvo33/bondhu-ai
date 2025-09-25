@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, Boolean, Text, DateTime
-from app.models.base import BaseModelWithIntID
+from app.models._base import BaseModelWithIntID
 
 
 class VectorMigrationConfig(BaseModelWithIntID):

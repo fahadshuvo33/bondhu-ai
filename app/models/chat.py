@@ -11,7 +11,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from app.models.base import BaseModel
+from app.models._base import BaseModel
 from enum import Enum
 
 
@@ -35,6 +35,9 @@ class ChatSession(BaseModel):
     context_type = Column(String, default=ChatContextType.PDF_BASED)
     study_material_id = Column(
         UUID(as_uuid=True), ForeignKey("study_materials.id"), nullable=True, index=True
+    )
+    syllabus_chat_room_id = Column(
+        UUID(as_uuid=True), ForeignKey("syllabus_chat_rooms.id"), nullable=True, index=True
     )
     classroom_id = Column(
         UUID(as_uuid=True), ForeignKey("classrooms.id"), nullable=True
@@ -89,6 +92,7 @@ class ChatSession(BaseModel):
 
     # Relationships
     user_document = relationship("UserDocument", back_populates="chat_sessions")
+    syllabus_chat_room = relationship("SyllabusChatRoom", backref="chat_sessions")
 
 
 class ChatMessage(BaseModel):
@@ -97,6 +101,7 @@ class ChatMessage(BaseModel):
     __tablename__ = "chat_messages"
 
     session_id = Column(UUID(as_uuid=True), ForeignKey("chat_sessions.id"), index=True)
+    quiz_id = Column(UUID(as_uuid=True), ForeignKey("quizzes.id"), nullable=True, index=True)
 
     # Message content
     role = Column(String, nullable=False)  # user, assistant, system
@@ -131,6 +136,7 @@ class ChatMessage(BaseModel):
 
     # Relationships
     session = relationship("ChatSession", back_populates="messages")
+    quiz = relationship("Quiz", backref="chat_messages")
 
 
 class ChatSummary(BaseModel):

@@ -13,7 +13,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from pgvector.sqlalchemy import Vector
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from app.models.base import BaseModel
+from app.models._base import BaseModel
 
 
 class DocumentMaster(BaseModel):
@@ -177,6 +177,7 @@ class UserDocument(BaseModel):
     master_document = relationship("DocumentMaster", back_populates="user_documents")
     chat_sessions = relationship("ChatSession", back_populates="user_document")
     annotations = relationship("DocumentAnnotation", back_populates="user_document")
+    study_materials = relationship("StudyMaterial", back_populates="user_document")
 
 
 class DocumentSimilarity(BaseModel):

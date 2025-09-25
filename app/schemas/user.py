@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List
 from datetime import datetime
+from pydantic import model_validator
 
 from app.schemas.base import BaseSchema, TimestampMixin
 from app.schemas.auth import AuthMethod
@@ -11,8 +12,9 @@ class UserBase(BaseModel):
     phone_number: Optional[str] = None
     full_name: Optional[str] = Field(None, min_length=2, max_length=100)
 
-    @validator("phone_number")
-    def validate_phone_number(cls, v):
+    @field_validator("phone_number")
+    @classmethod
+    def validate_phone_number(cls, v: Optional[str]) -> Optional[str]:
         if v:
             import re
 

@@ -1,7 +1,7 @@
-from sqlalchemy import Column, String, Integer, Float, Text, ForeignKey, DateTime
+from sqlalchemy import Column, String, Integer, Float, Text, ForeignKey, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from app.models.base import BaseModel
+from app.models._base import BaseModel
 
 
 class ProgressReport(BaseModel):
@@ -10,6 +10,7 @@ class ProgressReport(BaseModel):
     __tablename__ = "progress_reports"
 
     student_id = Column(UUID(as_uuid=True), ForeignKey("students.user_id"), index=True)
+    parent_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
 
     # Report period
     report_type = Column(String)  # daily, weekly, monthly
@@ -43,3 +44,4 @@ class ProgressReport(BaseModel):
 
     # Relationships
     student = relationship("Student", back_populates="progress_reports")
+    parent = relationship("User", foreign_keys=[parent_user_id])
